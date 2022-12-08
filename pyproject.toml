@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "memproc"
+version = "0.0.1"
+license = {file = "LICENSE"}
+dependencies = [
+  'psutil',
+  'rich',
+  'typer'
+]
+authors = [
+  {email = "sdelquin@gmail.com"},
+  {name = "Sergio Delgado Quintero"}
+]
+maintainers = [
+  {name = "Sergio Delgado QUintero", email = "sdelquin@gmail.com"}
+]
+description = "Fancy display of memory usage"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+homepage = "https://github.com/sdelquin/memproc"
+repository = "https://github.com/sdelquin/memproc"
+
+[project.scripts]
+memproc = "memproc.main:app"
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "src"
+]
