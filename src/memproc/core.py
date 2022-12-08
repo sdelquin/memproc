@@ -25,7 +25,9 @@ def get_processes():
     return processes
 
 
-def display_memproc(sort_by: str = 'mem', sort_reverse: bool = False):
+def display_memproc(
+    sort_by: str = 'mem', sort_reverse: bool = False, extended_info: bool = False
+):
     table = Table()
     table.add_column('PID')
     table.add_column('Name')
@@ -35,7 +37,8 @@ def display_memproc(sort_by: str = 'mem', sort_reverse: bool = False):
     for proc in processes:
         try:
             mem = proc.memory_info().rss / 2**20
-            table.add_row(str(proc.pid), proc.name(), f'{mem:.02f} MB')
+            name = ' '.join(proc.cmdline()) if extended_info else proc.name()
+            table.add_row(str(proc.pid), name, f'{mem:.02f} MB')
         except psutil.AccessDenied:
             pass
     console = Console()

@@ -34,6 +34,12 @@ def run(
         '-r',
         help='Sort reverse by current criteria.',
     ),
+    extended_info: bool = typer.Option(
+        False,
+        '--ext-info',
+        '-e',
+        help='Show extended info (command line) for each process.',
+    ),
 ):
     if version:
         print(utils.get_memproc_version())
@@ -41,7 +47,7 @@ def run(
     if update:
         utils.update_memproc()
         return
-    core.display_memproc(sort_by, sort_reverse)
+    core.display_memproc(sort_by, sort_reverse, extended_info)
 
 
 if __name__ == "__main__":
