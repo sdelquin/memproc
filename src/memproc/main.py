@@ -15,14 +15,13 @@ def run(
         False,
         '--version',
         show_default=False,
-        help='Show version',
+        help='Show installed version.',
     ),
     update: bool = typer.Option(
         False,
         '--update',
-        '-u',
         show_default=False,
-        help='Update memproc',
+        help='Update memproc to last version.',
     ),
 ):
     if version:
