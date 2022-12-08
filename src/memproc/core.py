@@ -40,7 +40,7 @@ def get_name_by_level(proc: psutil.Process, name_level: int):
 
 
 def display_memproc(name_level: int = 1, sort_by: str = 'mem', sort_reverse: bool = False):
-    table = Table()
+    table = Table(show_lines=name_level == 3)
     table.add_column('PID')
     table.add_column('Name')
     table.add_column('Mem')
