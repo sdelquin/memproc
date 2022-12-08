@@ -14,14 +14,18 @@ def run(
     version: bool = typer.Option(
         False,
         '--version',
-        show_default=False,
         help='Show installed version.',
     ),
     update: bool = typer.Option(
         False,
         '--update',
-        show_default=False,
         help='Update memproc to last version.',
+    ),
+    sort_by: str = typer.Option(
+        'mem',
+        '--sort',
+        '-s',
+        help='Sort results by criteria: [-]pid [-]name [-]mem',
     ),
 ):
     if version:
@@ -30,7 +34,7 @@ def run(
     if update:
         utils.update_memproc()
         return
-    core.display_memproc()
+    core.display_memproc(sort_by)
 
 
 if __name__ == "__main__":
