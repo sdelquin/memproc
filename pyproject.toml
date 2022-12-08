@@ -4,12 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "memproc"
-version = "0.0.1"
+version = "0.0.2"
 license = {file = "LICENSE"}
 dependencies = [
-  'psutil',
-  'rich',
-  'typer'
+  'psutil==5.9.4',
+  'rich==12.6.0',
+  'typer==0.7.0'
 ]
 authors = [
   {email = "sdelquin@gmail.com"},
