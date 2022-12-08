@@ -5,6 +5,7 @@ from memproc import core, utils
 
 app = typer.Typer(
     add_completion=False,
+    pretty_exceptions_enable=False,
     help='✨ Fancy display of memory usage.',
 )
 
@@ -25,7 +26,13 @@ def run(
         'mem',
         '--sort',
         '-s',
-        help='Sort results by criteria: [-]pid [-]name [-]mem',
+        help='Sort results by criteria: pid name mem.',
+    ),
+    sort_reverse: bool = typer.Option(
+        False,
+        '--sort-reverse',
+        '-r',
+        help='Sort reverse by current criteria.',
     ),
 ):
     if version:
@@ -34,7 +41,7 @@ def run(
     if update:
         utils.update_memproc()
         return
-    core.display_memproc(sort_by)
+    core.display_memproc(sort_by, sort_reverse)
 
 
 if __name__ == "__main__":
