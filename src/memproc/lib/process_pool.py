@@ -4,16 +4,26 @@ from rich.table import Table
 
 from memproc.lib.process import Process, ProcNameLevel
 
+from . import utils
+
 
 class ProcessPool:
-    def __init__(self, name_level: int, sort_by: str, sort_reverse: bool, show_total: bool):
+    def __init__(
+        self,
+        name_level: int,
+        sort_by: str,
+        sort_reverse: bool,
+        show_total: bool,
+        units: str,
+    ):
         self.name_level = name_level
         self.show_total = show_total
-        self.processes = self._get_processes(name_level)
+        self.units = units.upper()
+        self.processes = self._get_processes(name_level, units)
         self.mem = sum(p.mem for p in self.processes)
         self.processes.sort(key=lambda p: getattr(p, sort_by), reverse=sort_reverse)
 
-    def _get_processes(self, name_level: int) -> list:
+    def _get_processes(self, name_level: int, units: str) -> list:
         processes = []
         for proc in psutil.process_iter():
             try:
@@ -22,13 +32,14 @@ class ProcessPool:
             except psutil.AccessDenied:
                 pass
             else:
-                p = Process(proc, name_level)
+                p = Process(proc, name_level, self.units)
                 processes.append(p)
         return processes
 
     @property
     def humanized_mem(self):
-        return f'{self.mem / 2 ** 20:.02f} MB'
+        hmem = utils.convert_mem(self.mem, self.units)
+        return f'{hmem:.02f} {self.units}'
 
     def show(self):
         table = Table(show_lines=self.name_level == ProcNameLevel.CMDLINE)

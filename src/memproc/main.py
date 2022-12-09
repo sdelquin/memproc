@@ -47,6 +47,12 @@ def run(
         '-t',
         help='Show total used memory.',
     ),
+    units: str = typer.Option(
+        'mb',
+        '--units',
+        '-u',
+        help='Memory units (b, kb, mb, gb)',
+    ),
 ):
     if version:
         print(utils.get_memproc_version())
@@ -55,7 +61,7 @@ def run(
         utils.update_memproc()
         return
 
-    pool = ProcessPool(name_level, sort_by, sort_reverse, show_total)
+    pool = ProcessPool(name_level, sort_by, sort_reverse, show_total, units)
     pool.show()
 
 
