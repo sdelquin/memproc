@@ -1,7 +1,8 @@
 import typer
 from rich import print
 
-from memproc import core, utils
+from memproc.lib import utils
+from memproc.lib.process_pool import ProcessPool
 
 app = typer.Typer(
     add_completion=False,
@@ -47,7 +48,9 @@ def run(
     if update:
         utils.update_memproc()
         return
-    core.display_memproc(name_level, sort_by, sort_reverse)
+
+    pool = ProcessPool(name_level, sort_by, sort_reverse)
+    pool.show()
 
 
 if __name__ == "__main__":
