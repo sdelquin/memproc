@@ -27,12 +27,10 @@ class ProcessPool:
         processes = []
         for proc in psutil.process_iter():
             try:
-                # just to trigger AccessDenied if proceed
-                proc.memory_info()
+                p = Process(proc, name_level, self.units)
             except psutil.AccessDenied:
                 pass
             else:
-                p = Process(proc, name_level, self.units)
                 processes.append(p)
         return processes
 
