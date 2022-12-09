@@ -18,7 +18,11 @@ class Process:
             case ProcNameLevel.CMDLINE:
                 self.name = ' '.join(proc.cmdline())
         self.name = self.name if self.name else proc.name()
-        self.mem = proc.memory_info().rss / 2**20
+        self.mem = proc.memory_info().rss
+
+    @property
+    def humanized_mem(self):
+        return f'{self.mem / 2 ** 20:.02f} MB'
 
     def as_table_row(self):
-        return str(self.pid), self.name, f'{self.mem:.02f} MB'
+        return str(self.pid), self.name, self.humanized_mem

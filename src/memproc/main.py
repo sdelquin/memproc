@@ -7,7 +7,7 @@ from memproc.lib.process_pool import ProcessPool
 app = typer.Typer(
     add_completion=False,
     pretty_exceptions_enable=False,
-    help='✨ Fancy display of memory usage.',
+    help='✨ Fancy display of memory usage (RSS).',
 )
 
 
@@ -41,6 +41,12 @@ def run(
         '-n',
         help='1: Name | 2: Executable | 3: Command line',
     ),
+    show_total: bool = typer.Option(
+        False,
+        '--show-total',
+        '-t',
+        help='Show total used memory.',
+    ),
 ):
     if version:
         print(utils.get_memproc_version())
@@ -49,7 +55,7 @@ def run(
         utils.update_memproc()
         return
 
-    pool = ProcessPool(name_level, sort_by, sort_reverse)
+    pool = ProcessPool(name_level, sort_by, sort_reverse, show_total)
     pool.show()
 
 
