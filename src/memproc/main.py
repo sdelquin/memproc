@@ -48,10 +48,10 @@ def run(
         help='Show total used memory.',
     ),
     units: str = typer.Option(
-        'mb',
+        'm',
         '--units',
         '-u',
-        help='Memory units (b, kb, mb, gb)',
+        help='Memory units (k:KB, m:MB, g:GB)',
     ),
 ):
     if version:

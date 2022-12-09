@@ -12,6 +12,7 @@ class ProcNameLevel:
 class Process:
     def __init__(self, proc: psutil.Process, name_level: int, units: str):
         self.pid = proc.pid
+        self.units = units.upper()
         match name_level:
             case ProcNameLevel.NAME:
                 self.name = proc.name()
@@ -21,12 +22,11 @@ class Process:
                 self.name = ' '.join(proc.cmdline())
         self.name = self.name if self.name else proc.name()
         self.mem = proc.memory_info().rss
-        self.units = units.upper()
+        self.mem = utils.convert_mem(self.mem, self.units)
+        self.mem = int(self.mem) if int(self.mem) == self.mem else round(self.mem, 2)
 
-    @property
-    def humanized_mem(self):
-        hmem = utils.convert_mem(self.mem, self.units)
-        return f'{hmem:.02f} {self.units}'
+    def mem_display(self):
+        return f'{self.mem} {self.units}'
 
     def as_table_row(self):
-        return str(self.pid), self.name, self.humanized_mem
+        return str(self.pid), self.name, self.mem_display()
