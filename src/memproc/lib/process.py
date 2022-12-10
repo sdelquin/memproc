@@ -9,24 +9,35 @@ class ProcNameLevel:
     CMDLINE = 3
 
 
+PROCESS_FIELDS = {'p': 'pid', 'n': 'name', 'm': 'mem'}
+
+
 class Process:
-    def __init__(self, proc: psutil.Process, name_level: int, units: str):
-        self.pid = proc.pid
-        self.units = units.upper()
+    def __init__(self, pid: int, name: str, mem: float):
+        self.pid = pid
+        self.name = name
+        self.mem = mem
+
+    def __str__(self):
+        return f'[{self.pid}] {self.name}: {self.mem}'
+
+    @classmethod
+    def from_psutil(cls, proc: psutil.Process, name_level: int):
+        pid = proc.pid
         match name_level:
             case ProcNameLevel.NAME:
-                self.name = proc.name()
+                name = proc.name()
             case ProcNameLevel.EXE:
-                self.name = proc.exe()
+                name = proc.exe()
             case ProcNameLevel.CMDLINE:
-                self.name = ' '.join(proc.cmdline())
-        self.name = self.name if self.name else proc.name()
-        self.mem = proc.memory_info().rss
-        self.mem = utils.convert_mem(self.mem, self.units)
-        self.mem = int(self.mem) if int(self.mem) == self.mem else round(self.mem, 2)
+                name = ' '.join(proc.cmdline())
+        if not name:
+            name = proc.name()
+        mem = proc.memory_info().rss
+        return cls(pid, name, mem)
 
-    def mem_display(self):
-        return f'{self.mem} {self.units}'
+    def mem_display(self, units: str):
+        return utils.mem_display(self.mem, units)
 
-    def as_table_row(self):
-        return str(self.pid), self.name, self.mem_display()
+    def as_table_row(self, units: str):
+        return str(self.pid), self.name, self.mem_display(units)

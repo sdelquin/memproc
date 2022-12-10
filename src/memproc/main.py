@@ -59,6 +59,11 @@ def run(
         '-n',
         help='Limit the number of processes shown.',
     ),
+    group: bool = typer.Option(
+        False,
+        '--group',
+        help='Group process by name.',
+    ),
 ):
     if version:
         print(utils.get_memproc_version())
@@ -67,7 +72,9 @@ def run(
         utils.update_memproc()
         return
 
-    pool = ProcessPool(name_level, sort_by, sort_reverse, show_total, units, num_processes)
+    pool = ProcessPool(
+        name_level, sort_by, sort_reverse, show_total, units, num_processes, group
+    )
     pool.show()
 
 

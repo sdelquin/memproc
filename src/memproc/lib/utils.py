@@ -17,3 +17,9 @@ def convert_mem(mem_in_bytes: int, to_unit: str):
 
     mem_factor = MEM_FACTOR[to_unit]
     return mem_in_bytes / mem_factor
+
+
+def mem_display(mem_in_bytes: int, units: str):
+    mem = convert_mem(mem_in_bytes, units)
+    mem = int(mem) if int(mem) == mem else round(mem, 2)
+    return f'{mem} {units}'
