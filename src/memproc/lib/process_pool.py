@@ -22,6 +22,7 @@ class ProcessPool:
         group: bool,
         gt_mem: float,
         lt_mem: float,
+        find_description: str,
     ):
         self.description = description
         self.show_total = show_total
@@ -33,6 +34,7 @@ class ProcessPool:
             self._group_processes()
         self._sort_processes()
         self._filter_processes_by_memsize(gt_mem, lt_mem)
+        self._filter_processes_by_description(find_description)
         if num_processes > 0:
             self.processes = self.processes[:num_processes]
         self.mem = self._get_total_mem()
@@ -67,6 +69,11 @@ class ProcessPool:
             p
             for p in self.processes
             if lower_limit <= convert_mem(p.mem, self.units) <= upper_limit
+        ]
+
+    def _filter_processes_by_description(self, find):
+        self.processes = [
+            p for p in self.processes if find.upper() in p.description.upper()
         ]
 
     def _get_total_mem(self):

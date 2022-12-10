@@ -77,6 +77,12 @@ def run(
         '-l',
         help='Show processes with used memory lower than this value.',
     ),
+    find_description: str = typer.Option(
+        '',
+        '--find-description',
+        '-f',
+        help='Find processes with text by the chosen description criteria.',
+    ),
 ):
     if version:
         print(utils.get_memproc_version())
@@ -95,6 +101,7 @@ def run(
         group,
         gt_mem,
         lt_mem,
+        find_description,
     )
     pool.show()
 
