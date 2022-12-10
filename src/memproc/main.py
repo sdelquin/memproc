@@ -1,3 +1,4 @@
+import psutil
 import typer
 from rich import print
 
@@ -64,6 +65,18 @@ def run(
         '--group',
         help='Group process by description.',
     ),
+    gt_mem: float = typer.Option(
+        0,
+        '--greater-than',
+        '-g',
+        help='Show processes with used memory greater than this value.',
+    ),
+    lt_mem: float = typer.Option(
+        psutil.virtual_memory().total,
+        '--lower-than',
+        '-l',
+        help='Show processes with used memory lower than this value.',
+    ),
 ):
     if version:
         print(utils.get_memproc_version())
@@ -73,7 +86,15 @@ def run(
         return
 
     pool = ProcessPool(
-        description, sort_by, sort_reverse, show_total, units, num_processes, group
+        description,
+        sort_by,
+        sort_reverse,
+        show_total,
+        units,
+        num_processes,
+        group,
+        gt_mem,
+        lt_mem,
     )
     pool.show()
 

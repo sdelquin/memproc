@@ -7,6 +7,7 @@ from rich.table import Table
 from memproc.lib.process import PROCESS_FIELDS, ProcDesc, Process
 
 from . import utils
+from .utils import convert_mem
 
 
 class ProcessPool:
@@ -19,6 +20,8 @@ class ProcessPool:
         units: str,
         num_processes: int,
         group: bool,
+        gt_mem: float,
+        lt_mem: float,
     ):
         self.description = description
         self.show_total = show_total
@@ -29,6 +32,7 @@ class ProcessPool:
         if group:
             self._group_processes()
         self._sort_processes()
+        self._filter_processes_by_memsize(gt_mem, lt_mem)
         if num_processes > 0:
             self.processes = self.processes[:num_processes]
         self.mem = self._get_total_mem()
@@ -57,6 +61,13 @@ class ProcessPool:
         for desc, mem in groups.items():
             proc = Process(0, desc, mem)
             self.processes.append(proc)
+
+    def _filter_processes_by_memsize(self, lower_limit, upper_limit):
+        self.processes = [
+            p
+            for p in self.processes
+            if lower_limit <= convert_mem(p.mem, self.units) <= upper_limit
+        ]
 
     def _get_total_mem(self):
         return sum(p.mem for p in self.processes)
