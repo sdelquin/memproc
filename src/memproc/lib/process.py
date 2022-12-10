@@ -3,41 +3,41 @@ import psutil
 from . import utils
 
 
-class ProcNameLevel:
-    NAME = 1
-    EXE = 2
-    CMDLINE = 3
+class ProcDesc:
+    NAME = 'n'
+    EXE = 'e'
+    CMDLINE = 'c'
 
 
-PROCESS_FIELDS = {'p': 'pid', 'n': 'name', 'm': 'mem'}
+PROCESS_FIELDS = {'p': 'pid', 'd': 'description', 'm': 'mem'}
 
 
 class Process:
-    def __init__(self, pid: int, name: str, mem: float):
+    def __init__(self, pid: int, description: str, mem: float):
         self.pid = pid
-        self.name = name
+        self.description = description
         self.mem = mem
 
     def __str__(self):
-        return f'[{self.pid}] {self.name}: {self.mem}'
+        return f'[{self.pid}] {self.description}: {self.mem}'
 
     @classmethod
-    def from_psutil(cls, proc: psutil.Process, name_level: int):
+    def from_psutil(cls, proc: psutil.Process, description: str):
         pid = proc.pid
-        match name_level:
-            case ProcNameLevel.NAME:
-                name = proc.name()
-            case ProcNameLevel.EXE:
-                name = proc.exe()
-            case ProcNameLevel.CMDLINE:
-                name = ' '.join(proc.cmdline())
-        if not name:
-            name = proc.name()
+        match description:
+            case ProcDesc.NAME:
+                description = proc.name()
+            case ProcDesc.EXE:
+                description = proc.exe()
+            case ProcDesc.CMDLINE:
+                description = ' '.join(proc.cmdline())
+        if not description:
+            description = proc.name()
         mem = proc.memory_info().rss
-        return cls(pid, name, mem)
+        return cls(pid, description, mem)
 
     def mem_display(self, units: str):
         return utils.mem_display(self.mem, units)
 
     def as_table_row(self, units: str):
-        return str(self.pid), self.name, self.mem_display(units)
+        return str(self.pid), self.description, self.mem_display(units)

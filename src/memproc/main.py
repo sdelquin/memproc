@@ -27,7 +27,7 @@ def run(
         'm',
         '--sort',
         '-s',
-        help='Sort results by criteria (m:mem, p:pid, n:name).',
+        help='Sort results by criteria (m:mem, p:pid, d:description).',
     ),
     sort_reverse: bool = typer.Option(
         False,
@@ -35,11 +35,11 @@ def run(
         '-r',
         help='Sort reverse by current criteria.',
     ),
-    name_level: int = typer.Option(
-        1,
-        '--name-level',
-        '-l',
-        help='Name level (1:name, 2:executable, 3:command line)',
+    description: str = typer.Option(
+        'n',
+        '--description',
+        '-d',
+        help='Process description (n:name, e:executable, c:command line).',
     ),
     show_total: bool = typer.Option(
         False,
@@ -62,7 +62,7 @@ def run(
     group: bool = typer.Option(
         False,
         '--group',
-        help='Group process by name.',
+        help='Group process by description.',
     ),
 ):
     if version:
@@ -73,7 +73,7 @@ def run(
         return
 
     pool = ProcessPool(
-        name_level, sort_by, sort_reverse, show_total, units, num_processes, group
+        description, sort_by, sort_reverse, show_total, units, num_processes, group
     )
     pool.show()
 
