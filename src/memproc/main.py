@@ -24,10 +24,10 @@ def run(
         help='Update memproc to last version.',
     ),
     sort_by: str = typer.Option(
-        'mem',
+        'm',
         '--sort',
         '-s',
-        help='Sort results by criteria: pid name mem.',
+        help='Sort results by criteria (m:mem, p:pid, n:name).',
     ),
     sort_reverse: bool = typer.Option(
         False,
@@ -38,8 +38,8 @@ def run(
     name_level: int = typer.Option(
         1,
         '--name-level',
-        '-n',
-        help='1: Name | 2: Executable | 3: Command line',
+        '-l',
+        help='Name level (1:name, 2:executable, 3:command line)',
     ),
     show_total: bool = typer.Option(
         False,
@@ -51,7 +51,13 @@ def run(
         'm',
         '--units',
         '-u',
-        help='Memory units (k:KB, m:MB, g:GB)',
+        help='Memory units (k:KB, m:MB, g:GB).',
+    ),
+    num_processes: int = typer.Option(
+        0,
+        '--num-processes',
+        '-n',
+        help='Limit the number of processes shown.',
     ),
 ):
     if version:
@@ -61,7 +67,7 @@ def run(
         utils.update_memproc()
         return
 
-    pool = ProcessPool(name_level, sort_by, sort_reverse, show_total, units)
+    pool = ProcessPool(name_level, sort_by, sort_reverse, show_total, units, num_processes)
     pool.show()
 
 
