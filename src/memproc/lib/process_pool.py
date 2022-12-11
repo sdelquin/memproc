@@ -30,9 +30,10 @@ class ProcessPool:
         self.sort_by = PROCESS_FIELDS[sort_by]
         self.sort_reverse = sort_reverse
         self.units = f'{units.upper()}B'
+        self.group = group
         self.color_output = color_output
         self.get_processes()
-        if group:
+        if self.group:
             self.group_processes()
         self.sort_processes()
         self.filter_processes_by_memsize(gt_mem, lt_mem)
@@ -63,11 +64,13 @@ class ProcessPool:
 
     def group_processes(self):
         groups = defaultdict(int)
+        counter = defaultdict(int)
         for proc in self.processes:
             groups[proc.description] += proc.mem
+            counter[proc.description] += 1
         self.processes = []
         for desc, mem in groups.items():
-            proc = Process('', desc, mem)
+            proc = Process(counter[desc], desc, mem)
             self.processes.append(proc)
 
     def filter_processes_by_memsize(self, lower_limit, upper_limit):
@@ -100,7 +103,8 @@ class ProcessPool:
 
     def show(self):
         table = Table(show_lines=self.description == ProcDesc.CMDLINE)
-        table.add_column('PID')
+        heading = 'NUM' if self.group else 'PID'
+        table.add_column(heading)
         table.add_column('DESCRIPTION')
         table.add_column('MEMORY')
         for proc in self.processes:
