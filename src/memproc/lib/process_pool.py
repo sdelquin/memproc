@@ -40,7 +40,8 @@ class ProcessPool:
         if num_processes > 0:
             self.processes = self.processes[:num_processes]
         self.mem = self._get_total_mem()
-        self._grade_processes(self._get_grade_interval())
+        if len(self.processes) > 0:
+            self._grade_processes(self._get_grade_interval())
 
     def _get_processes(self):
         self.processes = []
