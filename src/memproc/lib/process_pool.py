@@ -31,19 +31,20 @@ class ProcessPool:
         self.sort_reverse = sort_reverse
         self.units = f'{units.upper()}B'
         self.color_output = color_output
-        self._get_processes()
+        self.get_processes()
         if group:
-            self._group_processes()
-        self._sort_processes()
-        self._filter_processes_by_memsize(gt_mem, lt_mem)
-        self._filter_processes_by_description(find_description)
+            self.group_processes()
+        self.sort_processes()
+        self.filter_processes_by_memsize(gt_mem, lt_mem)
+        self.filter_processes_by_description(find_description)
         if num_processes > 0:
             self.processes = self.processes[:num_processes]
-        self.mem = self._get_total_mem()
+        self.mem = self.get_total_mem()
         if len(self.processes) > 0:
-            self._grade_processes(self._get_grade_interval())
+            self.grade_processes(self.get_grade_interval())
 
-    def _get_processes(self):
+    def get_processes(self):
+        own_pid = psutil.Process().pid
         self.processes = []
         for proc in psutil.process_iter():
             try:
@@ -51,15 +52,16 @@ class ProcessPool:
             except (psutil.AccessDenied, psutil.NoSuchProcess):
                 pass
             else:
-                self.processes.append(p)
+                if p.pid != own_pid:
+                    self.processes.append(p)
 
-    def _sort_processes(self):
+    def sort_processes(self):
         reverse = (self.sort_by in ['pid', 'description'] and self.sort_reverse) or (
             self.sort_by == 'mem' and not self.sort_reverse
         )
         self.processes.sort(key=lambda p: getattr(p, self.sort_by), reverse=reverse)
 
-    def _group_processes(self):
+    def group_processes(self):
         groups = defaultdict(int)
         for proc in self.processes:
             groups[proc.description] += proc.mem
@@ -68,29 +70,29 @@ class ProcessPool:
             proc = Process('', desc, mem)
             self.processes.append(proc)
 
-    def _filter_processes_by_memsize(self, lower_limit, upper_limit):
+    def filter_processes_by_memsize(self, lower_limit, upper_limit):
         self.processes = [
             p
             for p in self.processes
             if lower_limit <= convert_mem(p.mem, self.units) <= upper_limit
         ]
 
-    def _filter_processes_by_description(self, find):
+    def filter_processes_by_description(self, find):
         self.processes = [
             p for p in self.processes if find.upper() in p.description.upper()
         ]
 
-    def _get_grade_interval(self, num_slots=4):
+    def get_grade_interval(self, num_slots=4):
         min_mem = min(p.mem for p in self.processes)
         max_mem = max(p.mem for p in self.processes)
         interval_size = (max_mem - min_mem) / num_slots
         return [min_mem + i * interval_size for i in range(1, num_slots + 1)]
 
-    def _grade_processes(self, grade_interval: list):
+    def grade_processes(self, grade_interval: list):
         for proc in self.processes:
             proc.grade(grade_interval)
 
-    def _get_total_mem(self):
+    def get_total_mem(self):
         return sum(p.mem for p in self.processes)
 
     def mem_display(self, units):
