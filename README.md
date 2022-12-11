@@ -6,7 +6,7 @@
 
 This tool lets you show all processes in your system (like `ps aux`) including memory usage with a fancy display and a bunch of command line options. [RSS](https://en.wikipedia.org/wiki/Resident_set_size) is the chosen memory metric.
 
-![Demo](./demo.png)
+![Demo](https://raw.githubusercontent.com/sdelquin/memproc/main/demo.png)
 
 ## Installation
 
@@ -19,22 +19,20 @@ $ pip install memproc
 ```console
 Usage: memproc [OPTIONS]
 
-╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --version                            Show installed version.                                                                               │
-│ --update                             Update memproc to last version.                                                                       │
-│ --sort              -s      TEXT     Sort results by criteria (m:mem, p:pid, d:description). [default: m]                                  │
-│ --sort-reverse      -r               Sort reverse by current criteria.                                                                     │
-│ --description       -d      TEXT     Process description (n:name, e:executable, c:command line). [default: n]                              │
-│ --show-total        -t               Show total used memory.                                                                               │
-│ --units             -u      TEXT     Memory units (k:KB, m:MB, g:GB). [default: m]                                                         │
-│ --num-processes     -n      INTEGER  Limit the number of processes shown. [default: 0]                                                     │
-│ --grouped                            Group process by description.                                                                         │
-│ --greater-than      -g      FLOAT    Show processes with used memory greater than this value. [default: 0]                                 │
-│ --lower-than        -l      FLOAT    Show processes with used memory lower than this value. [default: 17179869184]                         │
-│ --find-description  -f      TEXT     Find processes with text by the chosen description criteria.                                          │
-│ --no-color                           Disable output coloring.                                                                                    │
-│ --help                               Show this message and exit.                                                                           │
-╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ --version                            Show installed version.
+ --update                             Update memproc to last version.
+ --sort              -s      TEXT     Sort results by criteria (m:mem, p:pid, d:description). [default: m]
+ --sort-reverse      -r               Sort reverse by current criteria.
+ --description       -d      TEXT     Process description (n:name, e:executable, c:command line). [default: n]
+ --show-total        -t               Show total used memory.
+ --units             -u      TEXT     Memory units (k:KB, m:MB, g:GB). [default: m]
+ --num-processes     -n      INTEGER  Limit the number of processes shown. [default: 0]
+ --grouped                            Group process by description.
+ --greater-than      -g      FLOAT    Show processes with used memory greater than this value. [default: 0]
+ --lower-than        -l      FLOAT    Show processes with used memory lower than this value. [default: 17179869184]
+ --find-description  -f      TEXT     Find processes with text by the chosen description criteria.
+ --no-color                           Disable output coloring.
+ --help                               Show this message and exit.
 ```
 
 ### Get version
