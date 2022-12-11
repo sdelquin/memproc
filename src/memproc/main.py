@@ -86,7 +86,7 @@ def run(
     no_color: bool = typer.Option(
         False,
         '--no-color',
-        help='Omit row coloring.',
+        help='Disable output coloring.',
     ),
 ):
     if version:
