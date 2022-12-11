@@ -62,7 +62,7 @@ def run(
     ),
     group: bool = typer.Option(
         False,
-        '--group',
+        '--grouped',
         help='Group process by description.',
     ),
     gt_mem: float = typer.Option(
