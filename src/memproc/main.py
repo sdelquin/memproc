@@ -83,6 +83,11 @@ def run(
         '-f',
         help='Find processes with text by the chosen description criteria.',
     ),
+    no_color: bool = typer.Option(
+        False,
+        '--no-color',
+        help='Omit row coloring.',
+    ),
 ):
     if version:
         print(utils.get_memproc_version())
@@ -102,6 +107,7 @@ def run(
         gt_mem,
         lt_mem,
         find_description,
+        not no_color,
     )
     pool.show()
 

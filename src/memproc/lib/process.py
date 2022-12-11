@@ -11,6 +11,8 @@ class ProcDesc:
 
 PROCESS_FIELDS = {'p': 'pid', 'd': 'description', 'm': 'mem'}
 
+GRADE_COLORS = ['green', 'yellow', 'orange_red1', 'red']
+
 
 class Process:
     def __init__(self, pid: int, description: str, mem: float):
@@ -41,3 +43,9 @@ class Process:
 
     def as_table_row(self, units: str):
         return str(self.pid), self.description, self.mem_display(units)
+
+    def grade(self, grade_interval: list):
+        for index, gi in enumerate(grade_interval):
+            if self.mem <= gi:
+                self.grade_color = GRADE_COLORS[index]
+                break
